@@ -11,13 +11,19 @@ function App() {
   const [activeTab, setActiveTab] = useState('player');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // Global Persistence State
+  const [playerCache, setPlayerCache] = useState({ selected: null, stats: null });
+  const [teamCache, setTeamCache] = useState({ selected: null, stats: null });
+  const [pvpCache, setPvpCache] = useState({ p1: null, p2: null, comparison: null });
+  const [tvtCache, setTvtCache] = useState({ t1: null, t2: null, comparison: null });
+
   const renderContent = () => {
     switch (activeTab) {
-      case 'player': return <PlayerStats />;
-      case 'team': return <TeamStats />;
-      case 'pvp': return <PlayerVsPlayer />;
-      case 'tvt': return <TeamVsTeam />;
-      default: return <PlayerStats />;
+      case 'player': return <PlayerStats cache={playerCache} setCache={setPlayerCache} />;
+      case 'team': return <TeamStats cache={teamCache} setCache={setTeamCache} />;
+      case 'pvp': return <PlayerVsPlayer cache={pvpCache} setCache={setPvpCache} />;
+      case 'tvt': return <TeamVsTeam cache={tvtCache} setCache={setTvtCache} />;
+      default: return <PlayerStats cache={playerCache} setCache={setPlayerCache} />;
     }
   };
 

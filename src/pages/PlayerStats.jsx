@@ -33,11 +33,11 @@ const PlayerStatsSkeleton = () => (
   </div>
 );
 
-const PlayerStats = () => {
+const PlayerStats = ({ cache, setCache }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [players, setPlayers] = useState([]);
-  const [selectedPlayer, setSelectedPlayer] = useState(null);
-  const [stats, setStats] = useState(null);
+  const [selectedPlayer, setSelectedPlayer] = useState(cache.selected);
+  const [stats, setStats] = useState(cache.stats);
   const [loading, setLoading] = useState(false);
   const [metric, setMetric] = useState('pts');
 
@@ -67,17 +67,22 @@ const PlayerStats = () => {
   // Handle Search Input Change
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
-    if (selectedPlayer) setSelectedPlayer(null); // Reset when typing new search
+    if (selectedPlayer) {
+      setSelectedPlayer(null);
+      setStats(null);
+      setCache({ selected: null, stats: null });
+    }
   };
 
   // Fetch player stats when selected
   useEffect(() => {
-    if (!selectedPlayer) return;
+    if (!selectedPlayer || stats) return; // Don't fetch if already have stats
     const fetchStats = async () => {
       setLoading(true);
       try {
         const res = await axios.get(`http://localhost:5000/api/players/${selectedPlayer.playerId}`);
         setStats(res.data);
+        setCache({ selected: selectedPlayer, stats: res.data });
       } catch (err) {
         console.error('Error fetching stats:', err);
       } finally {

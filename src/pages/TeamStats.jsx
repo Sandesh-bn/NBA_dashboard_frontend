@@ -29,10 +29,10 @@ const TeamStatsSkeleton = () => (
   </div>
 );
 
-const TeamStats = () => {
+const TeamStats = ({ cache, setCache }) => {
   const [teams, setTeams] = useState([]);
-  const [selectedTeam, setSelectedTeam] = useState(null);
-  const [stats, setStats] = useState(null);
+  const [selectedTeam, setSelectedTeam] = useState(cache.selected);
+  const [stats, setStats] = useState(cache.stats);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -48,12 +48,13 @@ const TeamStats = () => {
   }, []);
 
   useEffect(() => {
-    if (!selectedTeam) return;
+    if (!selectedTeam || stats) return;
     const fetchStats = async () => {
       setLoading(true);
       try {
         const res = await axios.get(`http://localhost:5000/api/teams/${selectedTeam.teamId}`);
         setStats(res.data);
+        setCache({ selected: selectedTeam, stats: res.data });
       } catch (err) {
         console.error('Error fetching team stats:', err);
       } finally {
@@ -99,7 +100,8 @@ const TeamStats = () => {
             <CardContent className="p-8">
               <div className="flex flex-col md:flex-row items-center gap-8">
                 <div className="w-24 h-24 flex items-center justify-center rounded-2xl bg-primary text-primary-foreground font-black text-3xl shadow-lg">
-                  {stats.team.abbreviation}
+                  {/* {stats.team.abbreviation} */}
+                  <img src={`https://a.espncdn.com/i/teamlogos/nba/500/${stats.team.abbreviation}.png`}/>
                 </div>
                 <div className="flex-1 text-center md:text-left">
                   <h3 className="text-4xl font-black tracking-tight">{stats.team.fullName}</h3>

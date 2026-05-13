@@ -8,14 +8,14 @@ import { Search, Swords, TrendingUp, Zap, Target, Activity, Users } from 'lucide
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 
-const PlayerVsPlayer = () => {
+const PlayerVsPlayer = ({ cache, setCache }) => {
   const [search1, setSearch1] = useState('');
   const [search2, setSearch2] = useState('');
   const [players1, setPlayers1] = useState([]);
   const [players2, setPlayers2] = useState([]);
-  const [player1, setPlayer1] = useState(null);
-  const [player2, setPlayer2] = useState(null);
-  const [comparison, setComparison] = useState(null);
+  const [player1, setPlayer1] = useState(cache?.p1 || null);
+  const [player2, setPlayer2] = useState(cache?.p2 || null);
+  const [comparison, setComparison] = useState(cache?.comparison || null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -57,12 +57,13 @@ const PlayerVsPlayer = () => {
   }, [search2]);
 
   useEffect(() => {
-    if (!player1 || !player2) return;
+    if (!player1 || !player2 || comparison) return;
     const fetchComparison = async () => {
       setLoading(true);
       try {
         const res = await axios.get(`http://localhost:5000/api/compare/players?id1=${player1.playerId}&id2=${player2.playerId}`);
         setComparison(res.data);
+        setCache({ p1: player1, p2: player2, comparison: res.data });
       } catch (err) {
         console.error('Error fetching comparison:', err);
       } finally {
@@ -83,7 +84,8 @@ const PlayerVsPlayer = () => {
           onChange={(e) => { 
             setSearch(e.target.value); 
             setP(null); 
-            setComparison(null); // Clear comparison when player is reset
+            setComparison(null); 
+            setCache(prev => ({ ...prev, comparison: null, [label === "Player 1" ? 'p1' : 'p2']: null }));
           }}
         />
         {results.length > 0 && !p && search.length >= 2 && (

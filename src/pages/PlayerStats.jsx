@@ -68,16 +68,15 @@ const PlayerStats = ({ cache, setCache }) => {
   // Handle Search Input Change
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
-    if (selectedPlayer) {
-      setSelectedPlayer(null);
-      setStats(null);
-      setCache({ selected: null, stats: null });
-    }
   };
 
   // Fetch player stats when selected
   useEffect(() => {
-    if (!selectedPlayer || stats) return; // Don't fetch if already have stats
+    if (!selectedPlayer) return;
+    
+    // If stats already exist for this player, don't fetch again
+    if (stats && stats.player.playerId === selectedPlayer.playerId) return;
+
     const fetchStats = async () => {
       setLoading(true);
       try {
@@ -123,7 +122,7 @@ const PlayerStats = ({ cache, setCache }) => {
     { id: 'ts', label: 'Efficiency', color: '#8b5cf6' },
   ];
 
-  if (loading) {
+  if (loading && !stats) {
     return <PlayerStatsSkeleton />;
   }
 

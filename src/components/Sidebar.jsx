@@ -29,7 +29,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
   return (
     <div 
       className={cn(
-        "relative flex flex-col h-screen bg-card border-r transition-all duration-300 ease-in-out",
+        "relative flex flex-col h-screen bg-card/40 backdrop-blur-2xl border-r transition-all duration-300 ease-in-out",
         isCollapsed ? "w-20" : "w-64"
       )}
     >

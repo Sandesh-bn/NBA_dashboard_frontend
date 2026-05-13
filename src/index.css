@@ -77,4 +77,8 @@
     @apply bg-background text-foreground;
     font-family: var(--font-sans);
   }
+
+  .glass-card {
+    @apply bg-card/50 backdrop-blur-xl border border-white/10 shadow-2xl;
+  }
 }

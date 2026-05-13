@@ -92,6 +92,29 @@ const PlayerStats = ({ cache, setCache }) => {
     fetchStats();
   }, [selectedPlayer]);
 
+  // Fetch default player on load if none selected
+  useEffect(() => {
+    if (!selectedPlayer && !stats) {
+      const fetchDefault = async () => {
+        setLoading(true);
+        try {
+          const res = await axios.get(`http://localhost:5000/api/players/201939`);
+          if (res.data && res.data.player) {
+            setSelectedPlayer(res.data.player);
+            setStats(res.data);
+            setCache({ selected: res.data.player, stats: res.data });
+            setSearchQuery(`${res.data.player.firstName} ${res.data.player.lastName}`);
+          }
+        } catch (err) {
+          console.error('Error fetching default player:', err);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchDefault();
+    }
+  }, []);
+
   const metrics = [
     { id: 'pts', label: 'Points', color: '#3b82f6' },
     { id: 'ast', label: 'Assists', color: '#10b981' },
@@ -147,10 +170,10 @@ const PlayerStats = ({ cache, setCache }) => {
       ) : (
         <>
           {/* Player Info Card */}
-          <Card className="overflow-hidden border-none shadow-2xl bg-gradient-to-br from-card to-muted/50">
+          <Card className="glass-card overflow-hidden border-none shadow-2xl">
             <CardContent className="p-0">
               <div className="flex flex-col md:flex-row items-center gap-8 p-8">
-                <div className="w-40 h-40  bg-primary/10 flex items-center justify-center text-4xl font-bold text-primary border-4 border-primary/20">
+                <div className="w-60 h-60  bg-primary/10 flex items-center justify-center text-4xl font-bold text-primary border-4 border-primary/20">
                   {/* {stats.player.firstName[0]}{stats.player.lastName[0]} */}
                   <img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${stats.player.playerId}.png`}/>
                 </div>
@@ -186,7 +209,7 @@ const PlayerStats = ({ cache, setCache }) => {
           </Card>
 
           {/* Hero Visual: Trend Line */}
-          <Card className="col-span-full overflow-hidden">
+          <Card className="col-span-full overflow-hidden glass-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-7">
               <div className="space-y-1">
                 <CardTitle className="text-xl font-bold flex items-center gap-2">
@@ -248,7 +271,7 @@ const PlayerStats = ({ cache, setCache }) => {
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {/* Radar: Archetype */}
-            <Card>
+            <Card className="glass-card border-none">
               <CardHeader>
                 <CardTitle className="text-lg font-bold flex items-center gap-2">
                   <Activity className="h-5 w-5 text-primary" />
@@ -281,7 +304,7 @@ const PlayerStats = ({ cache, setCache }) => {
             </Card>
 
             {/* Game Log Bar Chart */}
-            <Card className="lg:col-span-2">
+            <Card className="lg:col-span-2 glass-card border-none">
               <CardHeader>
                 <CardTitle className="text-lg font-bold flex items-center gap-2">
                   <Zap className="h-5 w-5 text-yellow-500" />
@@ -317,7 +340,7 @@ const PlayerStats = ({ cache, setCache }) => {
             </Card>
 
             {/* Shooting Splits */}
-            <Card>
+            <Card className="glass-card border-none">
               <CardHeader>
                 <CardTitle className="text-lg font-bold flex items-center gap-2">
                   <Target className="h-5 w-5 text-red-500" />
@@ -352,7 +375,7 @@ const PlayerStats = ({ cache, setCache }) => {
             </Card>
 
             {/* Advanced Metrics Panel */}
-            <Card className="lg:col-span-2">
+            <Card className="lg:col-span-2 glass-card border-none">
               <CardHeader>
                 <CardTitle className="text-lg font-bold flex items-center gap-2">
                   <Shield className="h-5 w-5 text-blue-500" />

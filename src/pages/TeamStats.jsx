@@ -96,7 +96,7 @@ const TeamStats = ({ cache, setCache }) => {
       ) : (
         <>
           {/* Team Info Header */}
-          <Card className="border-none shadow-2xl bg-gradient-to-br from-card to-primary/5">
+          <Card className="glass-card border-none shadow-2xl">
             <CardContent className="p-8">
               <div className="flex flex-col md:flex-row items-center gap-8">
                 <div className="w-24 h-24 flex items-center justify-center rounded-2xl bg-primary text-primary-foreground font-black text-3xl shadow-lg">
@@ -126,7 +126,7 @@ const TeamStats = ({ cache, setCache }) => {
           </Card>
 
           {/* Hero Visual: Comparison with League Avg */}
-          <Card>
+          <Card className="glass-card">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <BarChart3 className="h-5 w-5 text-primary" />
@@ -158,7 +158,7 @@ const TeamStats = ({ cache, setCache }) => {
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {/* Efficiency Radar */}
-            <Card>
+            <Card className="glass-card">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Zap className="h-5 w-5 text-yellow-500" />
@@ -184,7 +184,7 @@ const TeamStats = ({ cache, setCache }) => {
             </Card>
 
             {/* Win/Loss Timeline */}
-            <Card className="lg:col-span-2">
+            <Card className="lg:col-span-2 glass-card">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Calendar className="h-5 w-5 text-green-500" />
@@ -210,8 +210,8 @@ const TeamStats = ({ cache, setCache }) => {
             </Card>
 
             {/* Home vs Away Split */}
-            <Card className="lg:col-span-3">
-              <CardHeader>
+            <Card className="lg:col-span-3 glass-card">
+             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Globe className="h-5 w-5 text-blue-500" />
                   Home vs Away Performance

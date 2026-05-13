@@ -14,6 +14,7 @@ import {
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useTheme } from '@/components/theme-provider';
+import Logo from '../assets/logo.png';
 
 const Sidebar = ({ activeTab, setActiveTab }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -33,8 +34,13 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
         isCollapsed ? "w-20" : "w-64"
       )}
     >
-      <div className="flex items-center justify-between p-4 mb-4">
-        {!isCollapsed && <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">NBA Insights</h1>}
+      <div className="flex items-center justify-between p-4 mb-2">
+        {!isCollapsed && 
+          <>
+          <img className='h-[40px] pr-2' src={Logo}/>
+          <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">NBA Insights</h1>
+          </>
+          }
         <Button 
           variant="ghost" 
           size="icon" 

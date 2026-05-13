@@ -142,7 +142,7 @@ const PlayerStats = ({ cache, setCache }) => {
             value={searchQuery}
             onChange={handleSearchChange}
           />
-          {players.length > 0 && !selectedPlayer && searchQuery.length >= 2 && (
+          {players.length > 0 && searchQuery.length >= 2 && (
             <div className="absolute top-full left-0 right-0 z-50 mt-2 bg-card border-2 border-primary/20 rounded-2xl shadow-2xl overflow-hidden backdrop-blur-xl">
               {players.map(p => (
                 <button

@@ -54,7 +54,6 @@ function App() {
             <button onClick={() => setIsMobileMenuOpen(true)} className="p-2 -ml-2">
               <Menu className="h-6 w-6" />
             </button>
-            <img src={Logo}/>
             <h1 className="ml-4 text-lg font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">NBA Insights</h1>
           </div>
 

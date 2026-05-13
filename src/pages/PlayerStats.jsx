@@ -13,6 +13,26 @@ import { cn } from '@/lib/utils';
 
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
 
+const PlayerStatsSkeleton = () => (
+  <div className="space-y-8 animate-pulse">
+    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="space-y-2">
+        <div className="h-8 w-64 bg-muted rounded-lg"></div>
+        <div className="h-4 w-48 bg-muted rounded-lg opacity-60"></div>
+      </div>
+      <div className="h-11 w-full md:w-80 bg-muted rounded-xl"></div>
+    </div>
+    <div className="h-48 w-full bg-muted rounded-3xl"></div>
+    <div className="h-[400px] w-full bg-muted rounded-3xl"></div>
+    <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <div className="h-[350px] bg-muted rounded-3xl"></div>
+      <div className="h-[350px] lg:col-span-2 bg-muted rounded-3xl"></div>
+      <div className="h-[300px] bg-muted rounded-3xl"></div>
+      <div className="h-[300px] lg:col-span-2 bg-muted rounded-3xl"></div>
+    </div>
+  </div>
+);
+
 const PlayerStats = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [players, setPlayers] = useState([]);
@@ -75,11 +95,7 @@ const PlayerStats = () => {
   ];
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-[600px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-      </div>
-    );
+    return <PlayerStatsSkeleton />;
   }
 
   return (

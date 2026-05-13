@@ -30,9 +30,14 @@ const PlayerStats = () => {
       }
       try {
         const res = await axios.get(`http://localhost:5000/api/players?search=${searchQuery}`);
-        setPlayers(res.data);
+        if (Array.isArray(res.data)) {
+          setPlayers(res.data);
+        } else {
+          setPlayers([]);
+        }
       } catch (err) {
         console.error('Error fetching players:', err);
+        setPlayers([]);
       }
     };
     const delayDebounceFn = setTimeout(fetchPlayers, 300);
@@ -103,7 +108,7 @@ const PlayerStats = () => {
                 >
                   <div className="flex flex-col">
                     <span className="font-bold text-base">{p.firstName} {p.lastName}</span>
-                    <span className="text-xs opacity-70">Team ID: {p.teamId}</span>
+                    <span className="text-xs opacity-70">{p.teamName}</span>
                   </div>
                   <Users className="h-4 w-4 opacity-50" />
                 </button>
@@ -133,7 +138,7 @@ const PlayerStats = () => {
                     {stats.player.firstName} {stats.player.lastName}
                   </h3>
                   <div className="flex flex-wrap justify-center md:justify-start gap-4 text-muted-foreground font-medium">
-                    <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">Team ID: {stats.player.teamId}</span>
+                    <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">{stats.player.teamName}</span>
                     <span>Player ID: {stats.player.playerId}</span>
                   </div>
                 </div>

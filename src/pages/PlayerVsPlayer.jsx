@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
-  RadarChart, PolarGrid, PolarAngleAxis, Radar, Legend, Cell
+  RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, Cell
 } from 'recharts';
-import { Search, Swords, TrendingUp, Zap, Target, Activity } from 'lucide-react';
+import { Search, Swords, TrendingUp, Zap, Target, Activity, Users } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 
@@ -23,8 +23,15 @@ const PlayerVsPlayer = () => {
       if (search1.length < 2) return;
       try {
         const res = await axios.get(`http://localhost:5000/api/players?search=${search1}`);
-        setPlayers1(res.data);
-      } catch (err) { console.error(err); }
+        if (Array.isArray(res.data)) {
+          setPlayers1(res.data);
+        } else {
+          setPlayers1([]);
+        }
+      } catch (err) { 
+        console.error(err); 
+        setPlayers1([]);
+      }
     };
     const t = setTimeout(fetch1, 300);
     return () => clearTimeout(t);
@@ -35,8 +42,15 @@ const PlayerVsPlayer = () => {
       if (search2.length < 2) return;
       try {
         const res = await axios.get(`http://localhost:5000/api/players?search=${search2}`);
-        setPlayers2(res.data);
-      } catch (err) { console.error(err); }
+        if (Array.isArray(res.data)) {
+          setPlayers2(res.data);
+        } else {
+          setPlayers2([]);
+        }
+      } catch (err) { 
+        console.error(err); 
+        setPlayers2([]);
+      }
     };
     const t = setTimeout(fetch2, 300);
     return () => clearTimeout(t);
@@ -66,7 +80,11 @@ const PlayerVsPlayer = () => {
           placeholder={`Search ${label}...`} 
           className="pl-10 h-12 text-lg bg-card border-2 border-transparent focus-visible:border-primary transition-all"
           value={p ? `${p.firstName} ${p.lastName}` : search}
-          onChange={(e) => { setSearch(e.target.value); setP(null); }}
+          onChange={(e) => { 
+            setSearch(e.target.value); 
+            setP(null); 
+            setComparison(null); // Clear comparison when player is reset
+          }}
         />
         {results.length > 0 && !p && search.length >= 2 && (
           <div className="absolute top-full left-0 right-0 z-50 mt-2 bg-card border-2 border-primary/20 rounded-2xl shadow-2xl overflow-hidden backdrop-blur-xl">
@@ -78,7 +96,7 @@ const PlayerVsPlayer = () => {
               >
                 <div className="flex flex-col">
                   <span className="font-bold">{res.firstName} {res.lastName}</span>
-                  <span className="text-xs opacity-70">Team ID: {res.teamId}</span>
+                  <span className="text-xs opacity-70">{res.teamName}</span>
                 </div>
                 <Users className="h-4 w-4 opacity-50" />
               </button>
@@ -109,7 +127,7 @@ const PlayerVsPlayer = () => {
         </div>
       )}
 
-      {comparison && !loading && (
+      {comparison && !loading && player1 && player2 && (
         <div className="grid gap-8">
           {/* Spider/Radar Comparison (BEST UX) */}
           <Card className="overflow-hidden">

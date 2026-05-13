@@ -17,7 +17,7 @@ const TeamVsTeam = () => {
   useEffect(() => {
     const fetchTeams = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/teams');
+        const res = await axios.get('${API_URL}api/teams');
         setTeams(res.data);
       } catch (err) { console.error(err); }
     };
@@ -29,7 +29,7 @@ const TeamVsTeam = () => {
     const fetchStats = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`http://localhost:5000/api/compare/teams?id1=${team1.teamId}&id2=${team2.teamId}`);
+        const res = await axios.get(`${API_URL}api/compare/teams?id1=${team1.teamId}&id2=${team2.teamId}`);
         setStats(res.data);
       } catch (err) { console.error(err); }
       finally { setLoading(false); }

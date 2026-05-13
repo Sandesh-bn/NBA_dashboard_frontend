@@ -9,6 +9,7 @@ import { Search, Trophy, BarChart3, Globe, Zap, Calendar } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 const TeamStatsSkeleton = () => (
   <div className="space-y-8 animate-pulse">
@@ -38,7 +39,7 @@ const TeamStats = ({ cache, setCache }) => {
   useEffect(() => {
     const fetchTeams = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/teams');
+        const res = await axios.get(API_URL + 'api/teams');
         setTeams(res.data);
       } catch (err) {
         console.error('Error fetching teams:', err);
@@ -52,7 +53,7 @@ const TeamStats = ({ cache, setCache }) => {
     const fetchStats = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`http://localhost:5000/api/teams/${selectedTeam.teamId}`);
+        const res = await axios.get(`${API_URL}api/teams/${selectedTeam.teamId}`);
         setStats(res.data);
         setCache({ selected: selectedTeam, stats: res.data });
       } catch (err) {

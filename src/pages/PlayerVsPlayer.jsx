@@ -8,6 +8,8 @@ import { Search, Swords, TrendingUp, Zap, Target, Activity, Users } from 'lucide
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+
 const PlayerVsPlayer = ({ cache, setCache }) => {
   const [search1, setSearch1] = useState('');
   const [search2, setSearch2] = useState('');
@@ -22,7 +24,7 @@ const PlayerVsPlayer = ({ cache, setCache }) => {
     const fetch1 = async () => {
       if (search1.length < 2) return;
       try {
-        const res = await axios.get(`http://localhost:5000/api/players?search=${search1}`);
+        const res = await axios.get(`${API_URL}api/players?search=${search1}`);
         if (Array.isArray(res.data)) {
           setPlayers1(res.data);
         } else {
@@ -41,7 +43,7 @@ const PlayerVsPlayer = ({ cache, setCache }) => {
     const fetch2 = async () => {
       if (search2.length < 2) return;
       try {
-        const res = await axios.get(`http://localhost:5000/api/players?search=${search2}`);
+        const res = await axios.get(`${API_URL}api/players?search=${search2}`);
         if (Array.isArray(res.data)) {
           setPlayers2(res.data);
         } else {
@@ -61,7 +63,7 @@ const PlayerVsPlayer = ({ cache, setCache }) => {
     const fetchComparison = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`http://localhost:5000/api/compare/players?id1=${player1.playerId}&id2=${player2.playerId}`);
+        const res = await axios.get(`${API_URL}api/compare/players?id1=${player1.playerId}&id2=${player2.playerId}`);
         setComparison(res.data);
         setCache({ p1: player1, p2: player2, comparison: res.data });
       } catch (err) {

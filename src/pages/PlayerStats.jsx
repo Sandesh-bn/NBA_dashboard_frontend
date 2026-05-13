@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 const PlayerStatsSkeleton = () => (
   <div className="space-y-8 animate-pulse">
@@ -49,7 +50,7 @@ const PlayerStats = ({ cache, setCache }) => {
         return;
       }
       try {
-        const res = await axios.get(`http://localhost:5000/api/players?search=${searchQuery}`);
+        const res = await axios.get(`${API_URL}api/players?search=${searchQuery}`);
         if (Array.isArray(res.data)) {
           setPlayers(res.data);
         } else {
@@ -80,7 +81,7 @@ const PlayerStats = ({ cache, setCache }) => {
     const fetchStats = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`http://localhost:5000/api/players/${selectedPlayer.playerId}`);
+        const res = await axios.get(`${API_URL}api/players/${selectedPlayer.playerId}`);
         setStats(res.data);
         setCache({ selected: selectedPlayer, stats: res.data });
       } catch (err) {
@@ -98,7 +99,7 @@ const PlayerStats = ({ cache, setCache }) => {
       const fetchDefault = async () => {
         setLoading(true);
         try {
-          const res = await axios.get(`http://localhost:5000/api/players/201939`);
+          const res = await axios.get(`${API_URL}api/players/201939`);
           if (res.data && res.data.player) {
             setSelectedPlayer(res.data.player);
             setStats(res.data);

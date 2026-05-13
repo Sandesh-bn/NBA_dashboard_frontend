@@ -150,7 +150,7 @@ const PlayerStats = ({ cache, setCache }) => {
           <Card className="overflow-hidden border-none shadow-2xl bg-gradient-to-br from-card to-muted/50">
             <CardContent className="p-0">
               <div className="flex flex-col md:flex-row items-center gap-8 p-8">
-                <div className="w-32 h-32 rounded-full bg-primary/10 flex items-center justify-center text-4xl font-bold text-primary border-4 border-primary/20">
+                <div className="w-40 h-40  bg-primary/10 flex items-center justify-center text-4xl font-bold text-primary border-4 border-primary/20">
                   {/* {stats.player.firstName[0]}{stats.player.lastName[0]} */}
                   <img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${stats.player.playerId}.png`}/>
                 </div>

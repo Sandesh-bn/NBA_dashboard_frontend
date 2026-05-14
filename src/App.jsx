@@ -13,7 +13,7 @@ function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Global Persistence State
-  const [playerCache, setPlayerCache] = useState({ selected: null, stats: null });
+  const [playerCache, setPlayerCache] = useState({ lastSelected: null, map: {} });
   const [teamCache, setTeamCache] = useState({ selected: null, stats: null });
   const [pvpCache, setPvpCache] = useState({ p1: null, p2: null, comparison: null });
   const [tvtCache, setTvtCache] = useState({ t1: null, t2: null, comparison: null });

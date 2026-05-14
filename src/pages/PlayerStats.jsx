@@ -37,8 +37,8 @@ const PlayerStatsSkeleton = () => (
 const PlayerStats = ({ cache, setCache }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [players, setPlayers] = useState([]);
-  const [selectedPlayer, setSelectedPlayer] = useState(cache.selected);
-  const [stats, setStats] = useState(cache.stats);
+  const [selectedPlayer, setSelectedPlayer] = useState(cache.lastSelected);
+  const [stats, setStats] = useState(cache.lastSelected ? cache.map[cache.lastSelected.playerId] : null);
   const [loading, setLoading] = useState(false);
   const [metric, setMetric] = useState('pts');
   const [error, setError] = useState(null);
@@ -85,12 +85,16 @@ const PlayerStats = ({ cache, setCache }) => {
         setError(null);
         const res = await axios.get(`${API_URL}api/players/${selectedPlayer.playerId}`);
         setStats(res.data);
-        setCache({ selected: selectedPlayer, stats: res.data });
+        setCache(prev => ({
+          ...prev,
+          lastSelected: selectedPlayer,
+          map: { ...prev.map, [selectedPlayer.playerId]: res.data }
+        }));
       } catch (err) {
         console.error('Error fetching stats:', err);
         setError(err.response?.data?.message || 'Player data not found');
         setStats(null); // Clear stats on error so it doesn't show stale data
-        setCache({ selected: null, stats: null });
+        setCache(prev => ({ ...prev, lastSelected: null }));
       } finally {
         setLoading(false);
       }
@@ -108,7 +112,10 @@ const PlayerStats = ({ cache, setCache }) => {
           if (res.data && res.data.player) {
             setSelectedPlayer(res.data.player);
             setStats(res.data);
-            setCache({ selected: res.data.player, stats: res.data });
+            setCache({ 
+              lastSelected: res.data.player, 
+              map: { [res.data.player.playerId]: res.data } 
+            });
             setSearchQuery(`${res.data.player.firstName} ${res.data.player.lastName}`);
           }
         } catch (err) {
@@ -155,7 +162,12 @@ const PlayerStats = ({ cache, setCache }) => {
                   key={p.playerId}
                   onClick={() => { 
                     setSelectedPlayer(p); 
-                    setStats(null); 
+                    // Check cache first for instant update
+                    if (cache.map[p.playerId]) {
+                      setStats(cache.map[p.playerId]);
+                    } else {
+                      setStats(null); 
+                    }
                     setPlayers([]); 
                     setSearchQuery(`${p.firstName} ${p.lastName}`); 
                   }}
@@ -178,7 +190,7 @@ const PlayerStats = ({ cache, setCache }) => {
           {error ? (
             <>
               <Activity className="h-12 w-12 text-destructive mb-4" />
-              <p className="text-xl font-bold text-destructive mb-2">Notice</p>
+              <p className="text-xl font-bold text-destructive mb-2">No data found</p>
               <p className="text-muted-foreground max-w-xs">{error}</p>
             </>
           ) : (

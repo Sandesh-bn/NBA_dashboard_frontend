@@ -6,7 +6,7 @@ import {
 } from 'recharts';
 import { Trophy, Swords, Calendar, TrendingUp, Home, Zap } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-const API_URL = import.meta.env.VITE_API_BASE_URL;
+const API_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/').replace(/\/$/, '') + '/';
 
 const TeamVsTeam = () => {
   const [teams, setTeams] = useState([]);

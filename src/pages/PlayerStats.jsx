@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
-const API_URL = import.meta.env.VITE_API_BASE_URL;
+const API_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/').replace(/\/$/, '') + '/';
 
 const PlayerStatsSkeleton = () => (
   <div className="space-y-8 animate-pulse">
@@ -41,6 +41,7 @@ const PlayerStats = ({ cache, setCache }) => {
   const [stats, setStats] = useState(cache.stats);
   const [loading, setLoading] = useState(false);
   const [metric, setMetric] = useState('pts');
+  const [error, setError] = useState(null);
 
   // Search players
   useEffect(() => {
@@ -68,6 +69,7 @@ const PlayerStats = ({ cache, setCache }) => {
   // Handle Search Input Change
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
+    if (error) setError(null);
   };
 
   // Fetch player stats when selected
@@ -80,11 +82,13 @@ const PlayerStats = ({ cache, setCache }) => {
     const fetchStats = async () => {
       setLoading(true);
       try {
+        setError(null);
         const res = await axios.get(`${API_URL}api/players/${selectedPlayer.playerId}`);
         setStats(res.data);
         setCache({ selected: selectedPlayer, stats: res.data });
       } catch (err) {
         console.error('Error fetching stats:', err);
+        setError(err.response?.data?.message || 'Player data not found');
         setStats(null); // Clear stats on error so it doesn't show stale data
         setCache({ selected: null, stats: null });
       } finally {
@@ -170,9 +174,19 @@ const PlayerStats = ({ cache, setCache }) => {
       </div>
 
       {!stats ? (
-        <div className="flex flex-col items-center justify-center h-[400px] border-2 border-dashed rounded-3xl bg-muted/30">
-          <Users className="h-12 w-12 text-muted-foreground mb-4" />
-          <p className="text-muted-foreground">Select a player to view detailed analytics</p>
+        <div className="flex flex-col items-center justify-center h-[400px] border-2 border-dashed rounded-3xl bg-muted/30 p-8 text-center">
+          {error ? (
+            <>
+              <Activity className="h-12 w-12 text-destructive mb-4" />
+              <p className="text-xl font-bold text-destructive mb-2">Notice</p>
+              <p className="text-muted-foreground max-w-xs">{error}</p>
+            </>
+          ) : (
+            <>
+              <Users className="h-12 w-12 text-muted-foreground mb-4" />
+              <p className="text-muted-foreground">Select a player to view detailed analytics</p>
+            </>
+          )}
         </div>
       ) : (
         <>

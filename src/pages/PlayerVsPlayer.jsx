@@ -8,7 +8,7 @@ import { Search, Swords, TrendingUp, Zap, Target, Activity, Users } from 'lucide
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 
-const API_URL = import.meta.env.VITE_API_BASE_URL;
+const API_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/').replace(/\/$/, '') + '/';
 
 const PlayerVsPlayer = ({ cache, setCache }) => {
   const [search1, setSearch1] = useState('');
@@ -85,12 +85,9 @@ const PlayerVsPlayer = ({ cache, setCache }) => {
           value={p ? `${p.firstName} ${p.lastName}` : search}
           onChange={(e) => { 
             setSearch(e.target.value); 
-            setP(null); 
-            setComparison(null); 
-            setCache(prev => ({ ...prev, comparison: null, [label === "Player 1" ? 'p1' : 'p2']: null }));
           }}
         />
-        {results.length > 0 && !p && search.length >= 2 && (
+        {results.length > 0 && search.length >= 2 && (
           <div className="absolute top-full left-0 right-0 z-50 mt-2 bg-card border-2 border-primary/20 rounded-2xl shadow-2xl overflow-hidden backdrop-blur-xl">
             {results.map(res => (
               <button

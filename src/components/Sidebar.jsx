@@ -37,8 +37,8 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
       <div className="flex items-center justify-between p-4 mb-2">
         {!isCollapsed && 
           <>
-          <img className='h-[40px] pr-2' src={Logo}/>
-          <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">NBA Insights</h1>
+          <img className='h-[40px]  bg-white' src={Logo}/>
+          <h1 className="pl-2 text-xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">NBA Insights</h1>
           </>
           }
         <Button 

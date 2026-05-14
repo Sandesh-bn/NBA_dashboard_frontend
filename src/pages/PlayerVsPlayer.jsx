@@ -11,8 +11,8 @@ import { Input } from '@/components/ui/input';
 const API_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/').replace(/\/$/, '') + '/';
 
 const PlayerVsPlayer = ({ cache, setCache }) => {
-  const [search1, setSearch1] = useState('');
-  const [search2, setSearch2] = useState('');
+  const [search1, setSearch1] = useState(cache?.p1 ? `${cache.p1.firstName} ${cache.p1.lastName}` : '');
+  const [search2, setSearch2] = useState(cache?.p2 ? `${cache.p2.firstName} ${cache.p2.lastName}` : '');
   const [players1, setPlayers1] = useState([]);
   const [players2, setPlayers2] = useState([]);
   const [player1, setPlayer1] = useState(cache?.p1 || null);
@@ -59,7 +59,7 @@ const PlayerVsPlayer = ({ cache, setCache }) => {
   }, [search2]);
 
   useEffect(() => {
-    if (!player1 || !player2 || comparison) return;
+    if (!player1 || !player2) return;
     const fetchComparison = async () => {
       setLoading(true);
       try {
@@ -82,9 +82,10 @@ const PlayerVsPlayer = ({ cache, setCache }) => {
         <Input 
           placeholder={`Search ${label}...`} 
           className="pl-10 h-12 text-lg bg-card border-2 border-transparent focus-visible:border-primary transition-all"
-          value={p ? `${p.firstName} ${p.lastName}` : search}
+          value={search}
           onChange={(e) => { 
-            setSearch(e.target.value); 
+            setSearch(e.target.value);
+            if (p) setP(null); // Clear selected player when typing starts
           }}
         />
         {results.length > 0 && search.length >= 2 && (
@@ -92,7 +93,12 @@ const PlayerVsPlayer = ({ cache, setCache }) => {
             {results.map(res => (
               <button
                 key={res.playerId}
-                onClick={() => { setP(res); setResults([]); setSearch(''); }}
+                onClick={() => { 
+                  setP(res); 
+                  setResults([]); 
+                  setSearch(`${res.firstName} ${res.lastName}`); // Set search to name
+                  setComparison(null); 
+                }}
                 className="w-full text-left px-5 py-4 hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-between border-b last:border-0 border-muted"
               >
                 <div className="flex flex-col">

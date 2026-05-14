@@ -85,6 +85,8 @@ const PlayerStats = ({ cache, setCache }) => {
         setCache({ selected: selectedPlayer, stats: res.data });
       } catch (err) {
         console.error('Error fetching stats:', err);
+        setStats(null); // Clear stats on error so it doesn't show stale data
+        setCache({ selected: null, stats: null });
       } finally {
         setLoading(false);
       }
@@ -147,7 +149,12 @@ const PlayerStats = ({ cache, setCache }) => {
               {players.map(p => (
                 <button
                   key={p.playerId}
-                  onClick={() => { setSelectedPlayer(p); setPlayers([]); setSearchQuery(`${p.firstName} ${p.lastName}`); }}
+                  onClick={() => { 
+                    setSelectedPlayer(p); 
+                    setStats(null); 
+                    setPlayers([]); 
+                    setSearchQuery(`${p.firstName} ${p.lastName}`); 
+                  }}
                   className="w-full text-left px-5 py-4 hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-between border-b last:border-0 border-muted"
                 >
                   <div className="flex flex-col">

@@ -160,6 +160,7 @@ const PlayerStats = ({ cache, setCache }) => {
               {players.map(p => (
                 <button
                   key={p.playerId}
+                  disabled={!p.hasData}
                   onClick={() => { 
                     setSelectedPlayer(p); 
                     // Check cache first for instant update
@@ -171,13 +172,19 @@ const PlayerStats = ({ cache, setCache }) => {
                     setPlayers([]); 
                     setSearchQuery(`${p.firstName} ${p.lastName}`); 
                   }}
-                  className="w-full text-left px-5 py-4 hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-between border-b last:border-0 border-muted"
+                  className={cn(
+                    "w-full text-left px-5 py-4 transition-all flex items-center justify-between border-b last:border-0 border-muted",
+                    p.hasData ? "hover:bg-primary hover:text-primary-foreground cursor-pointer" : "opacity-50 cursor-not-allowed bg-muted/20"
+                  )}
                 >
                   <div className="flex flex-col">
                     <span className="font-bold text-base">{p.firstName} {p.lastName}</span>
                     <span className="text-xs opacity-70">{p.teamName}</span>
                   </div>
-                  <Users className="h-4 w-4 opacity-50" />
+                  <div className="flex items-center gap-2">
+                    {!p.hasData && <span className="text-[10px] font-bold uppercase tracking-tighter bg-muted px-1.5 py-0.5 rounded text-muted-foreground">No Data</span>}
+                    <Users className="h-4 w-4 opacity-50" />
+                  </div>
                 </button>
               ))}
             </div>

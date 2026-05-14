@@ -16,13 +16,6 @@ const API_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/').
 
 const PlayerStatsSkeleton = () => (
   <div className="space-y-8 animate-pulse">
-    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-      <div className="space-y-2">
-        <div className="h-8 w-64 bg-muted rounded-lg"></div>
-        <div className="h-4 w-48 bg-muted rounded-lg opacity-60"></div>
-      </div>
-      <div className="h-11 w-full md:w-80 bg-muted rounded-xl"></div>
-    </div>
     <div className="h-48 w-full bg-muted rounded-3xl"></div>
     <div className="h-[400px] w-full bg-muted rounded-3xl"></div>
     <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -135,10 +128,6 @@ const PlayerStats = ({ cache, setCache }) => {
     { id: 'ts', label: 'Efficiency', color: '#8b5cf6' },
   ];
 
-  if (loading && !stats) {
-    return <PlayerStatsSkeleton />;
-  }
-
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       {/* Header & Search */}
@@ -155,7 +144,7 @@ const PlayerStats = ({ cache, setCache }) => {
             value={searchQuery}
             onChange={handleSearchChange}
           />
-          {players.length > 0 && searchQuery.length >= 2 && (
+          {players.length > 0 && searchQuery.length >= 2 && !loading && (
             <div className="absolute top-full left-0 right-0 z-50 mt-2 bg-card border-2 border-primary/20 rounded-2xl shadow-2xl overflow-hidden backdrop-blur-xl">
               {players.map(p => (
                 <button
@@ -192,7 +181,9 @@ const PlayerStats = ({ cache, setCache }) => {
         </div>
       </div>
 
-      {!stats ? (
+      {loading && !stats ? (
+        <PlayerStatsSkeleton />
+      ) : !stats ? (
         <div className="flex flex-col items-center justify-center h-[400px] border-2 border-dashed rounded-3xl bg-muted/30 p-8 text-center">
           {error ? (
             <>

@@ -49,7 +49,10 @@ const TeamStats = ({ cache, setCache }) => {
   }, []);
 
   useEffect(() => {
-    if (!selectedTeam || stats) return;
+    if (!selectedTeam) return;
+    
+    // If stats already exist for this team, don't fetch again
+    if (stats && stats.team.teamId === selectedTeam.teamId) return;
     const fetchStats = async () => {
       setLoading(true);
       try {
@@ -65,6 +68,28 @@ const TeamStats = ({ cache, setCache }) => {
     fetchStats();
   }, [selectedTeam]);
 
+  // Fetch default team on load if none selected
+  useEffect(() => {
+    if (!selectedTeam && !stats) {
+      const fetchDefault = async () => {
+        setLoading(true);
+        try {
+          const res = await axios.get(`${API_URL}api/teams/1610612747`);
+          if (res.data && res.data.team) {
+            setSelectedTeam(res.data.team);
+            setStats(res.data);
+            setCache({ selected: res.data.team, stats: res.data });
+          }
+        } catch (err) {
+          console.error('Error fetching default team:', err);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchDefault();
+    }
+  }, []);
+
   if (loading) {
     return <TeamStatsSkeleton />;
   }
@@ -79,7 +104,12 @@ const TeamStats = ({ cache, setCache }) => {
         <div className="w-full md:w-80">
           <select 
             className="w-full h-10 px-3 rounded-md border border-input bg-background"
-            onChange={(e) => setSelectedTeam(teams.find(t => t.teamId === parseInt(e.target.value)))}
+            value={selectedTeam?.teamId || ''}
+            onChange={(e) => {
+              const team = teams.find(t => t.teamId === parseInt(e.target.value));
+              setSelectedTeam(team);
+              setStats(null); // Clear stats to show loader
+            }}
           >
             <option value="">Select a Team</option>
             {teams.map(t => (

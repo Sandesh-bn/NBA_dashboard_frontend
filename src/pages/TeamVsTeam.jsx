@@ -27,6 +27,9 @@ const TeamVsTeam = () => {
 
   useEffect(() => {
     if (!team1 || !team2) return;
+    
+    // If stats already exist for these teams, don't fetch again
+    if (stats && stats.team1?.teamId === team1.teamId && stats.team2?.teamId === team2.teamId) return;
     const fetchStats = async () => {
       setLoading(true);
       try {
@@ -44,7 +47,11 @@ const TeamVsTeam = () => {
       <select 
         className="w-full h-12 px-4 rounded-xl border border-input bg-card shadow-sm font-bold text-lg focus:ring-2 ring-primary"
         value={selected?.teamId || ''}
-        onChange={(e) => onSelect(teams.find(t => t.teamId === parseInt(e.target.value)))}
+        onChange={(e) => {
+          const team = teams.find(t => t.teamId === parseInt(e.target.value));
+          onSelect(team);
+          setStats(null); // Clear stats to show loader
+        }}
       >
         <option value="">Select Team</option>
         {teams.map(t => <option key={t.teamId} value={t.teamId}>{t.fullName}</option>)}
